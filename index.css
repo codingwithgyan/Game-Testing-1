@@ -1,0 +1,18 @@
+body
+{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    /* background: #212121; */
+}
+
+#canvas1
+{
+    height: 600px;
+    width: 1200px;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: #212121;
+}
