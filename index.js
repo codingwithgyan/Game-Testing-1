@@ -4,6 +4,10 @@ window.addEventListener("load", function () {
   const ctx = canvas.getContext("2d");
   const CANVAS_WIDTH = (canvas.width = 1200);
   const CANVAS_HEIGHT = (canvas.height = 600);
+  const btn = document.getElementById("btn");
+  btn.addEventListener("click",function(){
+    window.location.reload();
+  })
   let gameScore = 0;
   let gameOver = false;
   class InputHandler {
@@ -278,3 +282,4 @@ window.addEventListener("load", function () {
   }
   animate(0);
 });
+

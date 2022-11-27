@@ -16,3 +16,19 @@ body
     transform: translate(-50%,-50%);
     background: #212121;
 }
+#btn
+{
+    width: 100px;
+    height: 32px;
+    padding: 6px 16px;
+    border: none;
+    outline: none;
+    background: rgb(87, 87, 246);
+    color: white;
+    border-radius:4px;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top:10px;
+    z-index: 100;
+}
