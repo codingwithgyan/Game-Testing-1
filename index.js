@@ -7,11 +7,17 @@ window.addEventListener("load", function () {
   const btn = document.getElementById("btn");
   btn.addEventListener("click",function(){
     window.location.reload();
-  })
+  });
   let gameScore = 0;
   let gameOver = false;
+  let jumSound = new Audio("./audio/jump.wav");
+  let musicSound = new Audio("./audio/music.ogg");
+  let explodeSound = new Audio("./audio/explode.wav");
   class InputHandler {
     constructor() {
+      musicSound.play().catch(error=>{
+        console.log(error); 
+      });
       this.keys = [];
       window.addEventListener("keydown", (e) => {
         if(e.keyCode === 32 && gameOver)
@@ -108,6 +114,7 @@ window.addEventListener("load", function () {
         this.onGround()
       ) {
         this.velocity -= 20;
+        jumSound.play();
       } else {
         this.speed = 0;
       }
@@ -265,6 +272,8 @@ window.addEventListener("load", function () {
     ctx.fillStyle = "white";
     ctx.font = "bold 50px Courier New";
     ctx.fillText("Game Over: Try Again!", CANVAS_WIDTH / 2, 203);
+    explodeSound.play();
+    musicSound.pause();
   }
 
 
@@ -300,9 +309,9 @@ window.addEventListener("load", function () {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     background.update();
     background.draw(ctx);
+    handleEnemy(ctx, deltaTime);
     player.update(input, deltaTime, enemyArr);
     player.draw(ctx);
-    handleEnemy(ctx, deltaTime);
     displayScore(ctx);
     if (!gameOver) requestAnimationFrame(animate);
     else{handleGameOver(ctx); return;};
@@ -316,6 +325,9 @@ window.addEventListener("load", function () {
       player.restart();
       background.restart();
       console.log(gameOver)
+      musicSound.play().catch(error=>{
+        console.log(error); 
+      });
       animate(0);
   }
 });
