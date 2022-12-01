@@ -14,10 +14,6 @@ window.addEventListener("load", function () {
     constructor() {
       this.keys = [];
       window.addEventListener("keydown", (e) => {
-        if (e.key === " " && gameOver === true) {
-          gameOver = false;
-        }
-
         if (
           (e.key === "ArrowUp" ||
             e.key === "ArrowDown" ||
@@ -39,6 +35,16 @@ window.addEventListener("load", function () {
         )
           this.keys.splice(this.keys.indexOf(e.key), 1);
       });
+
+      window.addEventListener("keypress",(e)=>{
+        console.log("===========key press",e,gameOver);
+        if(e.keyCode === 32 && gameOver)
+        {
+          gameOver = false;
+          restartGame();
+        }
+      })
+
     }
   }
 
@@ -52,7 +58,7 @@ window.addEventListener("load", function () {
       this.spriteHeight = 523;
       this.width = Math.floor(this.spriteWidth / 5);
       this.height = Math.floor(this.spriteHeight / 5);
-      this.x = this.gameWidth / 2 - this.width - 200;
+      this.x = this.gameWidth / 2 - this.width - 300;
       this.y = this.gameHeight - this.height;
       this.frameX = 0;
       this.frameY = 3;
@@ -65,17 +71,23 @@ window.addEventListener("load", function () {
       this.frameTimer = 0;
       this.frameInterval = 1000 / this.fps;
     }
+    restart()
+    {
+      this.x = this.gameWidth / 2 - this.width - 300;
+      this.y = this.gameHeight - this.height;
+      this.maxFrame = 9;
+      this.frameX = 0;
+      this.frameY = 3;
+    }
     update(input, deltaTime, enemyArr) {
       // Collision Detection
       enemyArr.forEach((enemy) => {
-        if (
-          !(
-            enemy.x > this.x + this.width ||
-            enemy.x + enemy.width < this.x ||
-            enemy.y > this.y + this.height ||
-            enemy.y + enemy.height < this.y
-          )
-        ) {
+        const dx = (enemy.x+enemy.width/2-20) - (this.x+this.width/2);
+        const dy = (enemy.y+enemy.height/2) - ((this.y+this.height/2)+10);
+        const distance = Math.sqrt(dx * dx+ dy * dy);
+        const radius= enemy.width/3 + this.width/3;
+        if(distance < radius)
+        {
           gameOver = true;
         }
       });
@@ -125,8 +137,6 @@ window.addEventListener("load", function () {
         this.y = this.gameHeight - this.height;
     }
     draw(context) {
-      // context.fillStyle = "white";
-      // context.fillRect(this.x,this.y,this.width,this.height);
       context.drawImage(
         this.image,
         this.frameX * this.spriteWidth,
@@ -138,6 +148,10 @@ window.addEventListener("load", function () {
         this.width,
         this.height
       );
+      // context.strokeStyle = "white";
+      // context.beginPath();
+      // context.arc(this.x+this.width/2,(this.y+this.height/2)+10,this.width/3,0,Math.PI*2);
+      // context.stroke();
     }
     onGround() {
       return this.y >= this.gameHeight - this.height;
@@ -155,6 +169,10 @@ window.addEventListener("load", function () {
       this.width = 2400;
       this.height = 720;
       this.speed = 3;
+    }
+    restart()
+    {
+      this.x = 0;
     }
     update() {
       this.x -= this.speed;
@@ -209,6 +227,7 @@ window.addEventListener("load", function () {
       }
     }
     draw(context) {
+     
       context.drawImage(
         this.image,
         this.frameX * this.spriteWidth,
@@ -220,10 +239,17 @@ window.addEventListener("load", function () {
         this.width,
         this.height
       );
+
+      // context.strokeStyle = "white";
+      // context.beginPath();
+      // context.arc(this.x+this.width/2-20,this.y+this.height/2,this.width/3,0,Math.PI*2);
+      // context.stroke();
+
     }
   }
 
   function displayScore(ctx) {
+    ctx.textAlign = "left";
     ctx.fillStyle = "black";
     ctx.font = "40px Courier New";
     ctx.fillText("Score : " + gameScore, 20, 50);
@@ -243,6 +269,7 @@ window.addEventListener("load", function () {
     ctx.font = "bold 50px Courier New";
     ctx.fillText("Game Over: Try Again!", CANVAS_WIDTH / 2, 203);
   }
+
 
   let enemyArr = [];
   let enemyTimer = 0;
@@ -267,6 +294,9 @@ window.addEventListener("load", function () {
   const player = new Player(CANVAS_WIDTH, CANVAS_HEIGHT);
   const background = new Background(CANVAS_WIDTH, CANVAS_HEIGHT);
   let lastTime = 0;
+
+
+
   function animate(timestamp) {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
@@ -278,8 +308,15 @@ window.addEventListener("load", function () {
     handleEnemy(ctx, deltaTime);
     displayScore(ctx);
     if (!gameOver) requestAnimationFrame(animate);
-    else handleGameOver(ctx);
+    else{handleGameOver(ctx); return;};
   }
   animate(0);
+  function restartGame()
+  {
+      player.restart();
+      background.restart();
+      console.log(gameOver)
+      animate(0);
+  }
 });
 
