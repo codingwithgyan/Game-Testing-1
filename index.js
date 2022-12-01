@@ -116,9 +116,15 @@ window.addEventListener("load", function () {
         if(!isActive)
         {
           musicSound.play();
+          // musicSound.loop();
+          musicSound.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play();
+        }, false);
           isActive = true;
         }
         jumSound.play();
+        
       } else {
         this.speed = 0;
       }
