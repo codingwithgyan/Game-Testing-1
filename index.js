@@ -14,7 +14,11 @@ window.addEventListener("load", function () {
     constructor() {
       this.keys = [];
       window.addEventListener("keydown", (e) => {
-        if (
+        if(e.keyCode === 32 && gameOver)
+        {
+          restartGame();
+        }
+        else if (
           (e.key === "ArrowUp" ||
             e.key === "ArrowDown" ||
             e.key === "ArrowLeft" ||
@@ -22,7 +26,9 @@ window.addEventListener("load", function () {
             e.key === " ") &&
           this.keys.indexOf(e.key) === -1
         )
+        {
           this.keys.push(e.key);
+        }
       });
 
       window.addEventListener("keyup", (e) => {
@@ -35,15 +41,6 @@ window.addEventListener("load", function () {
         )
           this.keys.splice(this.keys.indexOf(e.key), 1);
       });
-
-      window.addEventListener("keypress",(e)=>{
-        console.log("===========key press",e,gameOver);
-        if(e.keyCode === 32 && gameOver)
-        {
-          gameOver = false;
-          restartGame();
-        }
-      })
 
     }
   }
@@ -313,6 +310,9 @@ window.addEventListener("load", function () {
   animate(0);
   function restartGame()
   {
+      gameOver = false;
+      enemyArr = [];
+      gameScore = 0;
       player.restart();
       background.restart();
       console.log(gameOver)
