@@ -10,16 +10,14 @@ window.addEventListener("load", function () {
   });
   let gameScore = 0;
   let gameOver = false;
+  let isActive = false;
   let jumSound = new Audio("./audio/jump.wav");
   let musicSound = new Audio("./audio/music.ogg");
   let explodeSound = new Audio("./audio/explode.wav");
   class InputHandler {
     constructor() {
-      musicSound.play().catch(error=>{
-        console.log(error); 
-      });
       this.keys = [];
-      window.addEventListener("keydown", (e) => {
+      window.addEventListener("keydown", (e) => { 
         if(e.keyCode === 32 && gameOver)
         {
           restartGame();
@@ -114,6 +112,12 @@ window.addEventListener("load", function () {
         this.onGround()
       ) {
         this.velocity -= 20;
+        console.log("iactive",isActive);
+        if(!isActive)
+        {
+          musicSound.play();
+          isActive = true;
+        }
         jumSound.play();
       } else {
         this.speed = 0;
